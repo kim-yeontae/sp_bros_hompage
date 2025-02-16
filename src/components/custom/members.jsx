@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Check, MoveRight, PhoneCall } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -12,139 +17,180 @@ import Image from "next/image";
 
 const img_url = "@/images/person.jpeg";
 
-export const Members = () => (
-    <div className="w-full py-10 lg:py-20 px-5">
-        <div className="container mx-auto">
-            <div className="flex text-center justify-center items-center gap-4 flex-col">
-                <Badge>Bros</Badge>
-                <div className="flex gap-2 flex-col">
-                    <h2 className="text-3xl md:text-5xl tracking-tighter max-w-xl text-center font-regular">
-                        Bros
-                    </h2>
-                    <p className="text-lg leading-relaxed tracking-tight text-muted-foreground max-w-xl text-center">
-                        우리팀원을 소개합니다.
-                    </p>
-                </div>
-                <div className="grid pt-10 text-left grid-cols-1 lg:grid-cols-3 w-full gap-8">
-                    <Card className="w-full shadow-2xl rounded-md">
-                        <CardHeader>
-                            <CardTitle>
-                                <span className="text-4xl">Developer</span>
-                            </CardTitle>
-                            <CardDescription>Full-stack</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="flex flex-col gap-8 justify-start">
-                                <Image
-                                    width={200}
-                                    height={200}
-                                    className={"w-full"}
-                                    alt="person_1"
-                                    src={
-                                        "https://i.pinimg.com/474x/d2/c1/29/d2c1295333c078b20f99fb28a420f5ce.jpg"
-                                    }
-                                />
-                                <div className="flex flex-col gap-4 justify-start">
-                                    <div className="flex flex-row gap-4">
-                                        <Check className="w-4 h-4 mt-2 text-primary" />
-                                        <p>MySql</p>
-                                    </div>
-                                    <div className="flex flex-row gap-4">
-                                        <Check className="w-4 h-4 mt-2 text-primary" />
-                                        <p>Express</p>
-                                    </div>
-                                    <div className="flex flex-row gap-4">
-                                        <Check className="w-4 h-4 mt-2 text-primary" />
-                                        <p>Python</p>
-                                    </div>
-                                </div>
-                                {/* <Button className="gap-4">
-                                    Sign up today{" "}
-                                    <MoveRight className="w-4 h-4" />
-                                </Button> */}
-                            </div>
-                        </CardContent>
-                    </Card>
-                    <Card className="w-full shadow-2xl rounded-md">
-                        <CardHeader>
-                            <CardTitle>
-                                <span className="text-4xl">Developer</span>
-                            </CardTitle>
-                            <CardDescription>Front-end</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="flex flex-col gap-8 justify-start">
-                                <Image
-                                    width={200}
-                                    height={200}
-                                    className={"w-full"}
-                                    alt="person_1"
-                                    src={
-                                        "https://i.pinimg.com/474x/d2/c1/29/d2c1295333c078b20f99fb28a420f5ce.jpg"
-                                    }
-                                />
-                                <div className="flex flex-col gap-4 justify-start">
-                                    <div className="flex flex-row gap-4">
-                                        <Check className="w-4 h-4 mt-2 text-primary" />
-                                        <p>React</p>
-                                    </div>
-                                    <div className="flex flex-row gap-4">
-                                        <Check className="w-4 h-4 mt-2 text-primary" />
-                                        <p>Vanilla JS</p>
-                                    </div>
-                                    <div className="flex flex-row gap-4">
-                                        <Check className="w-4 h-4 mt-2 text-primary" />
-                                        <p>jQuery</p>
-                                    </div>
-                                </div>
-                                {/* <Button className="gap-4">
-                                    Sign up today{" "}
-                                    <MoveRight className="w-4 h-4" />
-                                </Button> */}
-                            </div>
-                        </CardContent>
-                    </Card>
-                    <Card className="w-full shadow-2xl rounded-md">
-                        <CardHeader>
-                            <CardTitle>
-                                <span className="text-4xl">Designer</span>
-                            </CardTitle>
-                            <CardDescription>Web-designer</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="flex flex-col gap-8 justify-start">
-                                <Image
-                                    width={200}
-                                    height={200}
-                                    className={"w-full"}
-                                    alt="person_1"
-                                    src={
-                                        "https://i.pinimg.com/474x/d2/c1/29/d2c1295333c078b20f99fb28a420f5ce.jpg"
-                                    }
-                                />
-                                <div className="flex flex-col gap-4 justify-start">
-                                    <div className="flex flex-row gap-4">
-                                        <Check className="w-4 h-4 mt-2 text-primary" />
-                                        <p>Figma</p>
-                                    </div>
-                                    <div className="flex flex-row gap-4">
-                                        <Check className="w-4 h-4 mt-2 text-primary" />
-                                        <p>Photoshop</p>
-                                    </div>
-                                    <div className="flex flex-row gap-4">
-                                        <Check className="w-4 h-4 mt-2 text-primary" />
-                                        <p>Illustrator</p>
-                                    </div>
-                                </div>
-                                {/* <Button className="gap-4">
-                                    Sign up today{" "}
-                                    <MoveRight className="w-4 h-4" />
-                                </Button> */}
-                            </div>
-                        </CardContent>
-                    </Card>
+gsap.registerPlugin(ScrollTrigger);
+export const Members = ({ setActiveSection }) => {
+    const sectionRef = useRef();
+    const [isView, setIsView] = useState(false);
+    useEffect(() => {
+        if (sectionRef.current) {
+            ScrollTrigger.create({
+                start: 0,
+                end: "max",
+                onUpdate: () => {
+                    setIsView(ScrollTrigger.isInViewport(sectionRef.current));
+                },
+            });
+            window.addEventListener("scroll", handleScroll);
+            return () => {
+                window.removeEventListener("scroll", handleScroll);
+            };
+        }
+    }, []);
+    useEffect(() => {
+        if (isView) {
+            gsap.to(".member-section", { opacity: 1, y: 0 });
+        }
+    }, [isView]);
+    // 스크롤 이벤트 핸들러
+    const handleScroll = (e) => {
+        if (
+            sectionRef.current.offsetTop - 120 < window.scrollY &&
+            window.scrollY <
+                sectionRef.current.offsetTop +
+                    sectionRef.current.offsetHeight -
+                    120
+        ) {
+            setActiveSection(sectionRef.current.id);
+        }
+    };
 
-                    {/* <Card className="w-full shadow-2xl rounded-md">
+    return (
+        <div
+            id="member"
+            className="w-full py-10 lg:py-20 px-5 member-section  opacity-0 translate-y-[500px]"
+            ref={sectionRef}
+        >
+            <div className="container mx-auto">
+                <div className="flex text-center justify-center items-center gap-4 flex-col">
+                    <Badge>Bros</Badge>
+                    <div className="flex gap-2 flex-col">
+                        <h2 className="text-3xl md:text-5xl tracking-tighter max-w-xl text-center font-regular">
+                            Bros
+                        </h2>
+                        <p className="text-lg leading-relaxed tracking-tight text-muted-foreground max-w-xl text-center">
+                            우리팀원을 소개합니다.
+                        </p>
+                    </div>
+                    <div className="grid pt-10 text-left grid-cols-1 lg:grid-cols-3 w-full gap-8">
+                        <Card className="w-full shadow-2xl rounded-md">
+                            <CardHeader>
+                                <CardTitle>
+                                    <span className="text-4xl">Developer</span>
+                                </CardTitle>
+                                <CardDescription>Full-stack</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex flex-col gap-8 justify-start">
+                                    <Image
+                                        width={200}
+                                        height={200}
+                                        className={"w-full"}
+                                        alt="person_1"
+                                        src={
+                                            "https://i.pinimg.com/474x/d2/c1/29/d2c1295333c078b20f99fb28a420f5ce.jpg"
+                                        }
+                                    />
+                                    <div className="flex flex-col gap-4 justify-start">
+                                        <div className="flex flex-row gap-4">
+                                            <Check className="w-4 h-4 mt-2 text-primary" />
+                                            <p>MySql</p>
+                                        </div>
+                                        <div className="flex flex-row gap-4">
+                                            <Check className="w-4 h-4 mt-2 text-primary" />
+                                            <p>Express</p>
+                                        </div>
+                                        <div className="flex flex-row gap-4">
+                                            <Check className="w-4 h-4 mt-2 text-primary" />
+                                            <p>Python</p>
+                                        </div>
+                                    </div>
+                                    {/* <Button className="gap-4">
+                                    Sign up today{" "}
+                                    <MoveRight className="w-4 h-4" />
+                                </Button> */}
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <Card className="w-full shadow-2xl rounded-md">
+                            <CardHeader>
+                                <CardTitle>
+                                    <span className="text-4xl">Developer</span>
+                                </CardTitle>
+                                <CardDescription>Front-end</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex flex-col gap-8 justify-start">
+                                    <Image
+                                        width={200}
+                                        height={200}
+                                        className={"w-full"}
+                                        alt="person_1"
+                                        src={
+                                            "https://i.pinimg.com/474x/d2/c1/29/d2c1295333c078b20f99fb28a420f5ce.jpg"
+                                        }
+                                    />
+                                    <div className="flex flex-col gap-4 justify-start">
+                                        <div className="flex flex-row gap-4">
+                                            <Check className="w-4 h-4 mt-2 text-primary" />
+                                            <p>React</p>
+                                        </div>
+                                        <div className="flex flex-row gap-4">
+                                            <Check className="w-4 h-4 mt-2 text-primary" />
+                                            <p>Vanilla JS</p>
+                                        </div>
+                                        <div className="flex flex-row gap-4">
+                                            <Check className="w-4 h-4 mt-2 text-primary" />
+                                            <p>jQuery</p>
+                                        </div>
+                                    </div>
+                                    {/* <Button className="gap-4">
+                                    Sign up today{" "}
+                                    <MoveRight className="w-4 h-4" />
+                                </Button> */}
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <Card className="w-full shadow-2xl rounded-md">
+                            <CardHeader>
+                                <CardTitle>
+                                    <span className="text-4xl">Designer</span>
+                                </CardTitle>
+                                <CardDescription>Web-designer</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex flex-col gap-8 justify-start">
+                                    <Image
+                                        width={200}
+                                        height={200}
+                                        className={"w-full"}
+                                        alt="person_1"
+                                        src={
+                                            "https://i.pinimg.com/474x/d2/c1/29/d2c1295333c078b20f99fb28a420f5ce.jpg"
+                                        }
+                                    />
+                                    <div className="flex flex-col gap-4 justify-start">
+                                        <div className="flex flex-row gap-4">
+                                            <Check className="w-4 h-4 mt-2 text-primary" />
+                                            <p>Figma</p>
+                                        </div>
+                                        <div className="flex flex-row gap-4">
+                                            <Check className="w-4 h-4 mt-2 text-primary" />
+                                            <p>Photoshop</p>
+                                        </div>
+                                        <div className="flex flex-row gap-4">
+                                            <Check className="w-4 h-4 mt-2 text-primary" />
+                                            <p>Illustrator</p>
+                                        </div>
+                                    </div>
+                                    {/* <Button className="gap-4">
+                                    Sign up today{" "}
+                                    <MoveRight className="w-4 h-4" />
+                                </Button> */}
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* <Card className="w-full shadow-2xl rounded-md">
                         <CardHeader>
                             <CardTitle>
                                 <span className="flex flex-row gap-4 items-center font-normal">
@@ -205,8 +251,9 @@ export const Members = () => (
                             </div>
                         </CardContent>
                     </Card> */}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
