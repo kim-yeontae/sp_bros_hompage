@@ -10,8 +10,14 @@ import { Members } from "@/components/custom/members";
 import { Projects } from "@/components/custom/projects";
 import { Contacts } from "@/components/custom/contacts";
 import { Footer } from "@/components/custom/footer";
+gsap.registerPlugin(ScrollTrigger);
 export default function Page() {
     const [activeSection, setActiveSecion] = useState("intro");
+    useEffect(() => {
+        requestAnimationFrame(() => {
+            ScrollTrigger.refresh();
+        });
+    }, []);
 
     return (
         <>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MoveRight, Mail } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -9,28 +10,31 @@ import { Button } from "@/components/ui/button";
 
 export const Contacts = ({ setActiveSection }) => {
     const sectionRef = useRef();
-    const [isView, setIsView] = useState(false);
+    useGSAP(() => {
+        gsap.fromTo(
+            ".contact-contents",
+            {
+                y: 500,
+            },
+            {
+                opacity: 1,
+                y: 0,
+                scrollTrigger: {
+                    trigger: ".contact-section",
+                    start: "top 80%",
+                },
+            }
+        );
+    });
     useEffect(() => {
         if (sectionRef.current) {
-            ScrollTrigger.create({
-                start: 0,
-                end: "max",
-
-                onUpdate: () => {
-                    setIsView(ScrollTrigger.isInViewport(sectionRef.current));
-                },
-            });
             window.addEventListener("scroll", handleScroll);
             return () => {
                 window.removeEventListener("scroll", handleScroll);
             };
         }
     }, []);
-    useEffect(() => {
-        if (isView) {
-            gsap.to(".contact-section .contens-warp", { opacity: 1, y: 0 });
-        }
-    }, [isView]);
+
     // 스크롤 이벤트 핸들러
     const handleScroll = (e) => {
         if (
@@ -49,7 +53,7 @@ export const Contacts = ({ setActiveSection }) => {
             className="w-full py-10 lg:py-20 bg-muted contact-section overflow-hidden"
             ref={sectionRef}
         >
-            <div className="contens-warp container mx-auto  opacity-0 translate-y-[500px]">
+            <div className="contact-contents container mx-auto  opacity-0">
                 <div className="flex flex-col text-center gap-4 items-center">
                     <div>
                         <Badge>Contact</Badge>

@@ -9,24 +9,24 @@ import { Badge } from "@/components/ui/badge";
 gsap.registerPlugin(ScrollTrigger);
 export const Projects = ({ setActiveSection }) => {
     const sectionRef = useRef();
-    const [isView, setIsView] = useState(false);
+    useGSAP(() => {
+        gsap.fromTo(
+            ".project-contents",
+            {
+                y: 500,
+            },
+            {
+                opacity: 1,
+                y: 0,
+                scrollTrigger: {
+                    trigger: ".project-section",
+                    start: "top 80%",
+                },
+            }
+        );
+    });
     useEffect(() => {
         if (sectionRef.current) {
-            gsap.fromTo(
-                ".project-section",
-                {
-                    y: 500,
-                },
-                {
-                    opacity: 1,
-                    y: 0,
-                    scrollTrigger: {
-                        trigger: sectionRef.current, // 트리거 요소는 .project-section
-                        start: "0% 70%", // 트리거의 top이 뷰포트의 80%에 도달할 때 애니메이션 시작
-                        // 트리거의 bottom이 뷰포트의 20%에 도달할 때 애니메이션 종료
-                    },
-                }
-            );
             window.addEventListener("scroll", handleScroll);
             return () => {
                 window.removeEventListener("scroll", handleScroll);
@@ -49,10 +49,10 @@ export const Projects = ({ setActiveSection }) => {
     return (
         <div
             id="project"
-            className="w-full py-10 lg:py-20 px-5 opacity-0   project-section"
+            className="w-full py-10 lg:py-20 px-5 project-section"
             ref={sectionRef}
         >
-            <div className="container mx-auto">
+            <div className="container project-contents mx-auto  opacity-0">
                 <div className="flex flex-col gap-10">
                     <div className="flex gap-4 flex-col items-start">
                         <div>
